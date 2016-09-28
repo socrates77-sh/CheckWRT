@@ -1,0 +1,9 @@
+D:\program\vs2005\CheckWRT\CheckWRT\bin\Debug\CheckWRT.exe
+D:\program\vs2005\CheckWRT\CheckWRT\bin\Debug\CheckWRT.pdb
+D:\program\vs2005\CheckWRT\CheckWRT\bin\Debug\CheckWRT.xml
+D:\program\vs2005\CheckWRT\CheckWRT\obj\Debug\ResolveAssemblyReference.cache
+D:\program\vs2005\CheckWRT\CheckWRT\obj\Debug\CheckWRT.Resources.resources
+D:\program\vs2005\CheckWRT\CheckWRT\obj\Debug\CheckWRT.vbproj.GenerateResource.Cache
+D:\program\vs2005\CheckWRT\CheckWRT\obj\Debug\CheckWRT.exe
+D:\program\vs2005\CheckWRT\CheckWRT\obj\Debug\CheckWRT.xml
+D:\program\vs2005\CheckWRT\CheckWRT\obj\Debug\CheckWRT.pdb
