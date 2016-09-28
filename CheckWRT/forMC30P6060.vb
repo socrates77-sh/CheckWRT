@@ -6,7 +6,7 @@ Module forMC30P6060
     Private Const Product_Type_Name = "MC30P6060"                   '品名
     Private Const Option_Win_Title As String = "配置 MC30P6060"     '配置Option的窗口标题
     Dim nIndexControl As Integer                                    '遍历控件的编号
-    Dim OptionFromWin(7) As UInt16                                 '存储Option窗口获取的option值
+    Dim OptionFromWin(7) As UInt16                                  '存储Option窗口获取的option值
 
     Public Function CheckAll() As Boolean
         Dim i As Integer
@@ -221,7 +221,7 @@ Module forMC30P6060
             '点击配置芯片Button，打开Option窗口
             If Not hCmdConfig = 0 Then
                 PostMessage(hCmdConfig, BM_CLICK, 0, 0)
-                System.Threading.Thread.Sleep(100)
+                System.Threading.Thread.Sleep(300)
                 Return FindWindow(vbNullString, Option_Win_Title)
             Else
                 Return 0

@@ -5,6 +5,18 @@ Module myMain
 
     Sub Main()
 
+        '判断EZPro100是否运行，且只有一个进程
+        Dim Processes As Process() = Process.GetProcessesByName(EZPRO_TITLE)
+        If Processes.Length = 0 Then
+            Console.WriteLine("ERROR: {0} is not running!", EZPRO_TITLE)
+            End
+        ElseIf Processes.Length > 1 Then
+            Console.WriteLine("ERROR: More than one {0} are running!", EZPRO_TITLE)
+            End
+        Else
+            Console.WriteLine("Found {0} running!" & vbCrLf, EZPRO_TITLE)
+        End If
+
         '初始化
         Try
             swLog = New StreamWriter(LOG_FILE_NAME)
@@ -14,56 +26,71 @@ Module myMain
 
         myWriteLine(Now.ToString & vbCrLf)
 
-        forMC30P6060.CheckAll()
+        'forMC30P6060.CheckAll()
 
+        ExtractWindow()
+        'GetWindowInfoHandle()
 
-        'Dim hWndMain As Integer
-        'Dim hWndChild As Integer
-        'Dim hWndChild1 As Integer
-        'Dim className As New StringBuilder(256)
-
-        'hWndMain = FindWindow(vbNullString, "EZPro100")
-        ''Win32API.GetClassName(hWndMain, className, 256)
-        'hWndChild = FindWindowEx(hWndMain, 0, vbNullString, "快捷工具栏")
-        'hWndChild1 = FindWindowEx(hWndChild, 0, vbNullString, "配置芯片")
-        'GetClassName(hWndChild1, className, 256)
-        'PostMessage(hWndChild1, BM_CLICK, 0, 0)
-        'System.Threading.Thread.Sleep(100)
-        'hWndMain = FindWindow(vbNullString, "配置 MC30P6060")
-        ''hWndChild = FindWindowEx(hWndMain, 0, vbNullString, "加密")
-        ''GetClassName(hWndChild, className, 256)
-
-        ''EnumWindows(New EnumWindowsCallback(AddressOf FillActiveProcessList), 0)
-        'EnumChildWindows(hWndMain, New EnumWindowsCallback(AddressOf FillActiveProcessList), 0)
-        ''EnumChildWindows(hWndMain, New EnumWindowsCallback(AddressOf FillActiveProcessList), 0)
-        ''EnumChildWindows(hWndMain, New EnumWindowsCallback(AddressOf FillActiveProcessList), 0)
-        ''Console.WriteLine(hWndMain.ToString)
-        ''Console.WriteLine(hWndChild.ToString)
-        ''Console.WriteLine(hWndChild1.ToString)
-        ''Console.WriteLine(className.ToString)
-        'Console.ReadLine()
         swLog.Close()
     End Sub
 
-    'Function FillActiveProcessList(ByVal hWnd As Integer, ByVal lParam As Integer) As Boolean
-    '    Dim windowText As New StringBuilder(StringBufferLength)
-    '    Dim className As New StringBuilder(StringBufferLength)
+    Private Function ExtractWindow() As Boolean
+        Dim hWndMain As Integer = FindWindow(vbNullString, EZPRO_TITLE)
+        'Dim hWndMain As Integer = GetWindowInfoHandle()
+        myWriteLine(hWndMain)
+        '遍历窗口的所有控件
+        If Not hWndMain = 0 Then
+            EnumChildWindows(hWndMain, New EnumWindowsCallback(AddressOf DoControl1), 0)
+        End If
+        Return True
+    End Function
 
-    '    GetWindowText(hWnd, windowText, StringBufferLength)
-    '    GetClassName(hWnd, className, StringBufferLength)
+    Private Function DoControl1(ByVal hWnd As Integer, ByVal lParam As Integer) As Boolean
+        Dim strControlText As New StringBuilder(STR_BUFFER_LEN)
+        Dim strClassName As New StringBuilder(STR_BUFFER_LEN)
 
-    '    Console.WriteLine(windowText.ToString)
-    '    Console.WriteLine(className.ToString)
+        GetWindowText(hWnd, strControlText, STR_BUFFER_LEN)
+        GetClassName(hWnd, strClassName, STR_BUFFER_LEN)
 
-    '    Return True
-    'End Function
+        'myWrite("[" & nIndexControl.ToString("00") & "]" & "(Class)" & strClassName.ToString.PadRight(15) _
+        '    & "(Text)" & strControlText.ToString.PadLeft(50))
 
-    'Private Function ExtractWindowOption(ByVal sProductType As String) As Boolean
-    '    Select Case sProductType
-    '        Case "MC30P6060"
-    '        Case Else
-    '            MsgBox("该型号暂不支持", MsgBoxStyle.OkOnly, "Warnning")
-    '    End Select
-    'End Function
+        myWriteLine("(Class)" & strClassName.ToString.PadRight(15) & "(Text)" & strControlText.ToString)
+        If strClassName.ToString = "TMemo" Then
+            myWriteLine("found")
+            Dim strSelect As New StringBuilder(STR_BUFFER_LEN)
+            SendMessageS(hWnd, WM_GETTEXT, 256, strSelect)
+            myWriteLine(strSelect.ToString)
+        End If
 
+        Return True
+    End Function
+
+    Private Function GetWindowInfoHandle() As Integer
+        Dim hWndMain As Integer
+        Dim hGroupTool As Integer
+        'Dim hCmdConfig As Integer
+
+        Try
+            '逐级查找配置芯片信息栏的handle
+            hWndMain = FindWindow(vbNullString, EZPRO_TITLE)
+            hGroupTool = FindWindowEx(hWndMain, 0, vbNullString, INFO_GROUP_TEXT)
+            'hCmdConfig = FindWindowEx(hGroupTool, 0, vbNullString, CONFIG_BUTTON_TEXT)
+            'myWriteLine(hGroupTool)
+
+            '点击配置芯片Button，打开Option窗口
+            'If Not hCmdConfig = 0 Then
+            '    PostMessage(hCmdConfig, BM_CLICK, 0, 0)
+            '    System.Threading.Thread.Sleep(300)
+            '    Return FindWindow(vbNullString, Option_Win_Title)
+            'Else
+            '    Return 0
+            'End If
+            Return hGroupTool
+
+        Catch ex As Exception
+            MsgBox(ex.Message.ToString)
+            Return 0
+        End Try
+    End Function
 End Module

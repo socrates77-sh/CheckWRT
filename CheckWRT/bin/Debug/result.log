@@ -1,14 +1,27 @@
-2016/9/11 23:16:15
+2016/9/28 23:10:14
 
-=======================================================================================
-  MC30P6060
-=======================================================================================
-******************
-OPTION[0]=FFFF
-OPTION[1]=FFFF
-OPTION[2]=FFFF
-OPTION[3]=FFFF
-OPTION[4]=FFFF
-OPTION[5]=FFFF
-OPTION[6]=FFFF
-OPTION[7]=FFFF
+527400
+(Class)TEdit          (Text)FF
+(Class)TButton        (Text)填充
+(Class)TGroupBox      (Text)芯片信息
+(Class)TStatusBar     (Text)
+(Class)TMemo          (Text)
+found
+芯片信息：MC30P6060
+程序信息：尚未打开程序
+check sum=3800H (不包含配置项), 3BFAH (包含配置项), 3FDEH (包含所有配置项)
+老版本软件：check sum=3800H (不包含配置项), 37FEH (包含配置项)
+
+(Class)TGroupBox      (Text)Rom Memory
+(Class)THexEditor     (Text)
+(Class)TGroupBox      (Text)快捷工具栏
+(Class)TBitBtn        (Text)滚动码设置 已Off
+(Class)TButton        (Text)Goto
+(Class)TEdit          (Text)
+(Class)TBitBtn        (Text)下载+编程
+(Class)TBitBtn        (Text)下载程序
+(Class)TBitBtn        (Text)读取
+(Class)TBitBtn        (Text)查空
+(Class)TBitBtn        (Text)配置芯片
+(Class)TBitBtn        (Text)选择芯片
+(Class)TToolBar       (Text)

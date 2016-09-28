@@ -8,6 +8,7 @@ Module General
     Public Const EZPRO_TITLE As String = "EZPro100"         'EZPro100程序主窗口标题
     Public Const TOOL_GROUP_TEXT As String = "快捷工具栏"   '快捷工具Group标题
     Public Const CONFIG_BUTTON_TEXT As String = "配置芯片"  '配置芯片Button标题
+    Public Const INFO_GROUP_TEXT As String = "芯片信息"     '芯片信息Group标题
 
     '全局变量
     Public swLog As StreamWriter    'LOG文件sw

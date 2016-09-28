@@ -8,6 +8,7 @@ Public Module Win32API
     Public Const CB_GETCURSEL = &H147   'Combo box get selected item index
     Public Const CB_GETCOUNT = &H146    'Combo box get count of items
     Public Const CB_GETLBTEXT = &H148   'Combo box get selected item string
+    Public Const WM_GETTEXT = 13        'Text box get text
 
 
     Public Declare Auto Function FindWindow Lib "user32.dll" _
