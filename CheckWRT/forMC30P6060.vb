@@ -269,17 +269,12 @@ Module forMC30P6060
 
     '获取配置Option窗口的句柄
     Private Function GetWindowOptionHandle() As Integer
-        Dim hWndMain As Integer
+        'Dim hWndMain As Integer
         Dim hGroupTool As Integer
         Dim hCmdConfig As Integer
 
         Try
             '逐级查找配置芯片Button的handle
-            hWndMain = FindWindow(vbNullString, EZPRO_TITLE)
-            If hWndMain = 0 Then
-                MsgBox("EZpro100 not running!")
-                End
-            End If
             hGroupTool = FindWindowEx(hWndMain, 0, vbNullString, TOOL_GROUP_TEXT)
             hCmdConfig = FindWindowEx(hGroupTool, 0, vbNullString, CONFIG_BUTTON_TEXT)
 

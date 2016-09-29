@@ -1,27 +1,58 @@
-2016/9/28 23:10:14
+CheckWRT(v0.1)   Start: 2016-9-29 19:36:17
+==================================================
 
-527400
-(Class)TEdit          (Text)FF
-(Class)TButton        (Text)填充
-(Class)TGroupBox      (Text)芯片信息
-(Class)TStatusBar     (Text)
-(Class)TMemo          (Text)
-found
-芯片信息：MC30P6060
-程序信息：尚未打开程序
-check sum=3800H (不包含配置项), 3BFAH (包含配置项), 3FDEH (包含所有配置项)
-老版本软件：check sum=3800H (不包含配置项), 37FEH (包含配置项)
-
-(Class)TGroupBox      (Text)Rom Memory
-(Class)THexEditor     (Text)
-(Class)TGroupBox      (Text)快捷工具栏
-(Class)TBitBtn        (Text)滚动码设置 已Off
-(Class)TButton        (Text)Goto
-(Class)TEdit          (Text)
-(Class)TBitBtn        (Text)下载+编程
-(Class)TBitBtn        (Text)下载程序
-(Class)TBitBtn        (Text)读取
-(Class)TBitBtn        (Text)查空
-(Class)TBitBtn        (Text)配置芯片
-(Class)TBitBtn        (Text)选择芯片
-(Class)TToolBar       (Text)
+=======================================================================================
+  MC30P6060
+=======================================================================================
+[00](Class)TComboBox      (Text)  (Value)3  内部高频RC振荡器模式&RTC32K模式
+[01](Class)Edit           (Text)
+[02](Class)TComboBox      (Text)  (Value)-1  <no select>
+[03](Class)Edit           (Text)
+[04](Class)TComboBox      (Text)  (Value)5  101: 455K
+[05](Class)Edit           (Text)
+[06](Class)TGroupBox      (Text)上拉电阻选择位
+[07](Class)TRadioButton   (Text)20K  (Value)1
+[08](Class)TRadioButton   (Text)80K  (Value)0
+[09](Class)TGroupBox      (Text)端口施密特阈值选择
+[10](Class)TRadioButton   (Text)0.7VDD/0.3VDD  (Value)1
+[11](Class)TRadioButton   (Text)1.77V/1.1V  (Value)0
+[12](Class)TGroupBox      (Text)芯片兼容选择
+[13](Class)TRadioButton   (Text)菲林  (Value)1
+[14](Class)TRadioButton   (Text)义隆  (Value)0
+[15](Class)TGroupBox      (Text)端口施密特
+[16](Class)TRadioButton   (Text)SMT 禁止  (Value)0
+[17](Class)TRadioButton   (Text)SMT 使能  (Value)1
+[18](Class)TGroupBox      (Text)RDPORT
+[19](Class)TRadioButton   (Text)IO作输出口时,从端口读  (Value)1
+[20](Class)TRadioButton   (Text)IO作输出口时,从寄存器读  (Value)0
+[21](Class)TGroupBox      (Text)代码保护
+[22](Class)TRadioButton   (Text)屏蔽代码保护功能  (Value)1
+[23](Class)TRadioButton   (Text)使能代码保护功能  (Value)0
+[24](Class)TGroupBox      (Text)指令周期选择
+[25](Class)TRadioButton   (Text)4T为一周期  (Value)1
+[26](Class)TRadioButton   (Text)2T为一周期  (Value)0
+[27](Class)TComboBox      (Text)  (Value)-1  <no select>
+[28](Class)Edit           (Text)
+[29](Class)TGroupBox      (Text)外部复位
+[30](Class)TRadioButton   (Text)外部复位功能使能  (Value)1
+[31](Class)TRadioButton   (Text)外部复位功能禁止  (Value)0
+[32](Class)TGroupBox      (Text)IO输出驱动选择
+[33](Class)TRadioButton   (Text)弱驱动  (Value)0
+[34](Class)TRadioButton   (Text)正常驱动  (Value)1
+[35](Class)TButton        (Text)取消
+[36](Class)TButton        (Text)确定
+[37](Class)TComboBox      (Text)  (Value)15  1111:3.8V
+[38](Class)Edit           (Text)
+[39](Class)TGroupBox      (Text)ODSEL
+[40](Class)TRadioButton   (Text)P13为输入口  (Value)1
+[41](Class)TRadioButton   (Text)P13为输入/开漏输出口  (Value)0
+[42](Class)TGroupBox      (Text)WDT 设置
+[43](Class)TRadioButton   (Text)WDT 开启  (Value)1
+[44](Class)TComboBox      (Text)  (Value)0  111:PWRT=TWDT=18ms
+[45](Class)Edit           (Text)
+[46](Class)TRadioButton   (Text)WDT 关闭  (Value)0
+******************
+OPTION[0]=FFFF
+OPTION[1]=FFFF
+OPTION[2]=FBFE
+OPTION[3]=FFFD

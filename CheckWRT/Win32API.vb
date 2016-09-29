@@ -8,7 +8,11 @@ Public Module Win32API
     Public Const CB_GETCURSEL = &H147   'Combo box get selected item index
     Public Const CB_GETCOUNT = &H146    'Combo box get count of items
     Public Const CB_GETLBTEXT = &H148   'Combo box get selected item string
-    Public Const WM_GETTEXT = 13        'Text box get text
+    Public Const WM_GETTEXT = &HD       'Text box get text
+    Public Const WM_SYSCOMMAND = &H112
+    Public Const WM_COMMAND = &H111
+    Public Const WM_KEYDOWN = &H100
+    Public Const VK_RETURN = &HD
 
 
     Public Declare Auto Function FindWindow Lib "user32.dll" _
@@ -42,4 +46,13 @@ Public Module Win32API
 
     Public Declare Function EnumChildWindows Lib "user32.dll" _
         Alias "EnumChildWindows" (ByVal hWndParent As Integer, ByVal callback As EnumWindowsCallback, ByVal lParam As Integer) As Integer
+
+    Public Declare Function GetMenu Lib "user32.dll" Alias "GetMenu" (ByVal hwnd As Integer) As Integer
+
+    Public Declare Function GetMenuItemID Lib "user32.dll" Alias "GetMenuItemID" (ByVal hMenu As Integer, ByVal nPos As Integer) As Integer
+
+    Public Declare Function GetSubMenu Lib "user32" Alias "GetSubMenu" (ByVal hMenu As Integer, ByVal nPos As Integer) As Integer
+
+    Public Declare Function BringWindowToTop Lib "user32" Alias "BringWindowToTop" (ByVal hwnd As Integer) As Integer
+
 End Module

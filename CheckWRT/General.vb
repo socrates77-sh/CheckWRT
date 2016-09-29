@@ -3,15 +3,17 @@ Imports System.IO
 Module General
 
     '全局常量 
-    Public Const LOG_FILE_NAME As String = "result.log"     'LOG文件名
-    Public Const STR_BUFFER_LEN As Integer = 256            'StringBuffer类默认长度
-    Public Const EZPRO_TITLE As String = "EZPro100"         'EZPro100程序主窗口标题
-    Public Const TOOL_GROUP_TEXT As String = "快捷工具栏"   '快捷工具Group标题
-    Public Const CONFIG_BUTTON_TEXT As String = "配置芯片"  '配置芯片Button标题
-    Public Const INFO_GROUP_TEXT As String = "芯片信息"     '芯片信息Group标题
+    Public Const LOG_FILE_NAME As String = "result.log"             'LOG文件名
+    Public Const CHKLIST_FILE_NAME As String = "checklist.txt"      'Checklist文件名
+    Public Const STR_BUFFER_LEN As Integer = 256                    'StringBuffer类默认长度
+    Public Const EZPRO_TITLE As String = "EZPro100"                 'EZPro100程序主窗口标题
+    Public Const TOOL_GROUP_TEXT As String = "快捷工具栏"           '快捷工具Group标题
+    Public Const CONFIG_BUTTON_TEXT As String = "配置芯片"          '配置芯片Button标题
+    Public Const INFO_GROUP_TEXT As String = "芯片信息"             '芯片信息Group标题
 
     '全局变量
     Public swLog As StreamWriter    'LOG文件sw
+    Public hWndMain As Integer      '主窗口句柄
 
     '同时输出到LOG文件和console
     Public Sub myWriteLine(ByVal str As String)
