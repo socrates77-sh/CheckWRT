@@ -15,18 +15,56 @@ Module myMain
         '初始化
         InitMain()
 
-        forMC30P6060.CheckAll()
-        'myWriteLine(GetInfoText())
-        ''ExtractWindow()
-        ''GetWindowInfoHandle()
+        'forMC30P6060.CheckAll()
+
         'ClickMenu(hWndMain, 4, 0)
         'System.Threading.Thread.Sleep(1000)
         'Dim hwnd As Integer = FindWindow(hWndMain, EZPRO_TITLE)
-        'PostMessage(hWndMain, WM_KEYDOWN, VK_RETURN, 0)
+        'myWriteLine(hwnd.ToString)
+        'PostMessage(hwnd, WM_KEYDOWN, VK_RETURN, 0)
 
+        myWriteLine(GetChipTypeHandle().ToString)
 
         swLog.Close()
     End Sub
+
+    '获取配置选择芯片窗口的句柄
+    Private Function GetChipTypeHandle() As Integer
+        Try
+            '逐级查找配置芯片Button的handle
+            Dim hGroupTool As Integer = FindWindowEx(hWndMain, 0, vbNullString, TOOL_GROUP_TEXT)
+            Dim hCmdConfig As Integer = FindWindowEx(hGroupTool, 0, vbNullString, CHIP_BUTTON_TEXT)
+
+            '点击选择芯片Button，打开窗口
+            If Not hCmdConfig = 0 Then
+                PostMessage(hCmdConfig, BM_CLICK, 0, 0)
+                System.Threading.Thread.Sleep(300)          '等待300ms待窗口打开，否则可能取不到句柄
+                Dim hwndChip As Integer = FindWindow(vbNullString, CHIP_BUTTON_TEXT)
+                Dim hTreeChipType As Integer = FindWindowEx(hGroupTool, 0, "TTreeView", vbNullString)
+                Return hTreeChipType
+            Else
+                Return 0
+            End If
+        Catch ex As Exception
+            MsgBox(ex.Message.ToString)
+            Return 0
+        End Try
+    End Function
+
+
+    'Private Function GetVersionFromAbout() As String
+    '    ClickMenu(hWndMain, 4, 0)
+    '    System.Threading.Thread.Sleep(1000)
+    '    '如果弹出无法找到串口的窗口，则关闭之
+    '    Dim hwndMessage As Integer = FindWindow(hWndMain, EZPRO_TITLE)
+    '    'Dim hwndMessage As Integer = FindWindow(hWndMain, vbNullString)
+    '    'If hwnd Then
+    '    'PostMessage(hwndMessage, WM_KEYDOWN, VK_RETURN, 0)
+    '    'System.Threading.Thread.Sleep(2000)
+    '    ''End If
+    '    'Dim hwndAbout = FindWindow(hWndMain, ABOUT_TITLE)
+    '    Return hwndMessage.ToString
+    'End Function
 
     '取得芯片信息栏的文字，利用EnumChildWindows及EnumWindowsCallback实现
     Private Function GetInfoText() As String
@@ -97,13 +135,9 @@ Module myMain
     'nSubMenuPos子菜单序号，0起始
     'nMenuItemPos菜单项序号，0起始
     Public Function ClickMenu(ByVal hWnd As Integer, ByVal nSubMenuPos As Integer, ByVal nMenuItemPos As Integer) As Integer
-        Dim hMenu As Integer
-        Dim hSubMenu As Integer
-        Dim hMenuItem As Integer
-
-        hMenu = GetMenu(hWnd)
-        hSubMenu = GetSubMenu(hMenu, nSubMenuPos)
-        hMenuItem = GetMenuItemID(hSubMenu, nMenuItemPos)
+        Dim hMenu As Integer = GetMenu(hWnd)
+        Dim hSubMenu As Integer = GetSubMenu(hMenu, nSubMenuPos)
+        Dim hMenuItem As Integer = GetMenuItemID(hSubMenu, nMenuItemPos)
         BringWindowToTop(hWnd)
         PostMessage(hWnd, WM_COMMAND, hMenuItem, 0)
     End Function

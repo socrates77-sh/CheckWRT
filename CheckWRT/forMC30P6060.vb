@@ -269,14 +269,10 @@ Module forMC30P6060
 
     '获取配置Option窗口的句柄
     Private Function GetWindowOptionHandle() As Integer
-        'Dim hWndMain As Integer
-        Dim hGroupTool As Integer
-        Dim hCmdConfig As Integer
-
         Try
             '逐级查找配置芯片Button的handle
-            hGroupTool = FindWindowEx(hWndMain, 0, vbNullString, TOOL_GROUP_TEXT)
-            hCmdConfig = FindWindowEx(hGroupTool, 0, vbNullString, CONFIG_BUTTON_TEXT)
+            Dim hGroupTool As Integer = FindWindowEx(hWndMain, 0, vbNullString, TOOL_GROUP_TEXT)
+            Dim hCmdConfig As Integer = FindWindowEx(hGroupTool, 0, vbNullString, CONFIG_BUTTON_TEXT)
 
             '点击配置芯片Button，打开Option窗口
             If Not hCmdConfig = 0 Then
@@ -286,7 +282,6 @@ Module forMC30P6060
             Else
                 Return 0
             End If
-
         Catch ex As Exception
             MsgBox(ex.Message.ToString)
             Return 0
