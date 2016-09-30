@@ -9,7 +9,8 @@ Module myMain
 
     Dim sInfoText As String             '芯片信息栏的文本
     Dim alChipList As ArrayList         '所有芯片型号
-    Dim sEzproVersion As String         'EZPRO软件版本号
+    Dim sEzproVersionFromFile As String         'EZPRO软件版本号，来自checklist文件
+    Dim sEzproVersionFromAbout As String         'EZPRO软件版本号，来自About窗口
 
     Sub Main()
         '初始化
@@ -17,13 +18,26 @@ Module myMain
 
         'forMC30P6060.CheckAll()
 
+        GetVersionFromAbout()
+        myWriteLine(sEzproVersionFromAbout)
+        'myWriteLine(hWndMain.ToString)
         'ClickMenu(hWndMain, 4, 0)
         'System.Threading.Thread.Sleep(1000)
-        'Dim hwnd As Integer = FindWindow(hWndMain, EZPRO_TITLE)
+        'Dim hwnd As Integer = FindWindow(vbNullString, EZPRO_TITLE)
         'myWriteLine(hwnd.ToString)
         'PostMessage(hwnd, WM_KEYDOWN, VK_RETURN, 0)
 
-        myWriteLine(GetChipTypeHandle().ToString)
+        'ExtractWindow()
+
+        ''myWriteLine(GetChipTypeHandle().ToString)
+
+        'myWriteLine(GetInfoText())
+        ''ExtractWindow()
+        'GetWindowInfoHandle()
+        'ClickMenu(hWndMain, 4, 0)
+        'System.Threading.Thread.Sleep(1000)
+        'Dim hwnd As Integer = FindWindow(hWndMain, EZPRO_TITLE)
+        'PostMessage(hWndMain, WM_KEYDOWN, VK_RETURN, 0)
 
         swLog.Close()
     End Sub
@@ -51,26 +65,46 @@ Module myMain
         End Try
     End Function
 
+    '取得芯片信息栏的文字，
+    '直接设置sEzproVersionFromAbout变量
+    Private Sub GetVersionFromAbout()
+        ClickMenu(hWndMain, 4, 0)
+        System.Threading.Thread.Sleep(3000)
+        '如果弹出无法找到串口的窗口，则关闭之
+        Dim hwndMessage As Integer = FindWindow(vbNullString, EZPRO_TITLE)
+        If hwndMessage Then
+            PostMessage(hwndMessage, WM_KEYDOWN, VK_RETURN, 0)
+            System.Threading.Thread.Sleep(5000)     '等待About窗口显示的时间，特别长！
+        End If
+        Dim hwndAbout = FindWindow(vbNullString, ABOUT_TITLE)
+        '利用EnumChildWindows及EnumWindowsCallback实现
+        EnumChildWindows(hwndAbout, New EnumWindowsCallback(AddressOf Do_FindVersionText), 0)
+        '关闭About窗口
+        System.Threading.Thread.Sleep(1000)
+        PostMessage(hwndAbout, WM_KEYDOWN, VK_RETURN, 0)
+    End Sub
 
-    'Private Function GetVersionFromAbout() As String
-    '    ClickMenu(hWndMain, 4, 0)
-    '    System.Threading.Thread.Sleep(1000)
-    '    '如果弹出无法找到串口的窗口，则关闭之
-    '    Dim hwndMessage As Integer = FindWindow(hWndMain, EZPRO_TITLE)
-    '    'Dim hwndMessage As Integer = FindWindow(hWndMain, vbNullString)
-    '    'If hwnd Then
-    '    'PostMessage(hwndMessage, WM_KEYDOWN, VK_RETURN, 0)
-    '    'System.Threading.Thread.Sleep(2000)
-    '    ''End If
-    '    'Dim hwndAbout = FindWindow(hWndMain, ABOUT_TITLE)
-    '    Return hwndMessage.ToString
-    'End Function
+    Private Function Do_FindVersionText(ByVal hWnd As Integer, ByVal lParam As Integer) As Boolean
+        Dim strControlText As New StringBuilder(STR_BUFFER_LEN)
+        'Dim strClassName As New StringBuilder(STR_BUFFER_LEN)
+        GetWindowText(hWnd, strControlText, STR_BUFFER_LEN)
+        'GetClassName(hWnd, strClassName, STR_BUFFER_LEN)
+
+        'myWriteLine("(Class)" & strClassName.ToString.PadRight(15) & "(Text)" & strControlText.ToString)
+        If strControlText.ToString.Contains("Version") Then             '查找到含Version那一个TEXT
+            sEzproVersionFromAbout = strControlText.ToString
+            Return False
+        Else
+            Return True
+        End If
+    End Function
+
 
     '取得芯片信息栏的文字，利用EnumChildWindows及EnumWindowsCallback实现
-    Private Function GetInfoText() As String
+    '直接设置sInfoText变量
+    Private Sub GetInfoText()
         EnumChildWindows(hWndMain, New EnumWindowsCallback(AddressOf Do_FindInfoText), 0)
-        Return sInfoText
-    End Function
+    End Sub
 
     Private Function Do_FindInfoText(ByVal hWnd As Integer, ByVal lParam As Integer) As Boolean
         Dim strClassName As New StringBuilder(STR_BUFFER_LEN)
@@ -110,7 +144,7 @@ Module myMain
         Try
             Dim sr As StreamReader = New StreamReader(CHKLIST_FILE_NAME)
             '从checklist读EZPRO的版本
-            sEzproVersion = sr.ReadLine
+            sEzproVersionFromFile = sr.ReadLine
 
             '从checklist读所有芯片型号
             alChipList = New ArrayList
@@ -142,38 +176,38 @@ Module myMain
         PostMessage(hWnd, WM_COMMAND, hMenuItem, 0)
     End Function
 
-    'Private Function ExtractWindow() As Boolean
-    '    Dim hWndMain As Integer = FindWindow(vbNullString, EZPRO_TITLE)
-    '    'Dim hWndMain As Integer = GetWindowInfoHandle()
-    '    myWriteLine(hWndMain)
-    '    '遍历窗口的所有控件
-    '    If Not hWndMain = 0 Then
-    '        EnumChildWindows(hWndMain, New EnumWindowsCallback(AddressOf DoControl1), 0)
-    '    End If
-    '    Return True
-    'End Function
+    Private Function ExtractWindow() As Boolean
+        Dim hWndMain As Integer = FindWindow(vbNullString, EZPRO_TITLE)
+        'Dim hWndMain As Integer = GetWindowInfoHandle()
+        myWriteLine(hWndMain)
+        '遍历窗口的所有控件
+        If Not hWndMain = 0 Then
+            EnumChildWindows(hWndMain, New EnumWindowsCallback(AddressOf DoControl1), 0)
+        End If
+        Return True
+    End Function
 
-    'Private Function DoControl1(ByVal hWnd As Integer, ByVal lParam As Integer) As Boolean
-    '    Dim strControlText As New StringBuilder(STR_BUFFER_LEN)
-    '    Dim strClassName As New StringBuilder(STR_BUFFER_LEN)
+    Private Function DoControl1(ByVal hWnd As Integer, ByVal lParam As Integer) As Boolean
+        Dim strControlText As New StringBuilder(STR_BUFFER_LEN)
+        Dim strClassName As New StringBuilder(STR_BUFFER_LEN)
 
-    '    GetWindowText(hWnd, strControlText, STR_BUFFER_LEN)
-    '    GetClassName(hWnd, strClassName, STR_BUFFER_LEN)
+        GetWindowText(hWnd, strControlText, STR_BUFFER_LEN)
+        GetClassName(hWnd, strClassName, STR_BUFFER_LEN)
 
-    '    'myWrite("[" & nIndexControl.ToString("00") & "]" & "(Class)" & strClassName.ToString.PadRight(15) _
-    '    '    & "(Text)" & strControlText.ToString.PadLeft(50))
+        'myWrite("[" & nIndexControl.ToString("00") & "]" & "(Class)" & strClassName.ToString.PadRight(15) _
+        '    & "(Text)" & strControlText.ToString.PadLeft(50))
 
-    '    myWriteLine("(Class)" & strClassName.ToString.PadRight(15) & "(Text)" & strControlText.ToString)
-    '    If strClassName.ToString = "TMemo" Then
-    '        myWriteLine("found")
-    '        Dim strSelect As New StringBuilder(STR_BUFFER_LEN)
-    '        SendMessageS(hWnd, WM_GETTEXT, 256, strSelect)
-    '        myWriteLine(strSelect.ToString)
-    '        Return False
-    '    End If
+        myWriteLine("(Class)" & strClassName.ToString.PadRight(15) & "(Text)" & strControlText.ToString)
+        If strClassName.ToString = "TMemo" Then
+            myWriteLine("found")
+            Dim strSelect As New StringBuilder(STR_BUFFER_LEN)
+            SendMessageS(hWnd, WM_GETTEXT, 256, strSelect)
+            myWriteLine(strSelect.ToString)
+            Return False
+        End If
 
-    '    Return True
-    'End Function
+        Return True
+    End Function
 
     'Private Function GetWindowInfoHandle() As Integer
     '    Dim hWndMain As Integer
