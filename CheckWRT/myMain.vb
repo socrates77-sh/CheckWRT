@@ -7,11 +7,11 @@ Imports System.IO
 Module myMain
     Const sVersion As String = "0.1"    '本软件版本号
 
-    Dim sInfoText As String             '芯片信息栏的文本
     Dim alChipList As ArrayList         '所有芯片型号
     'Dim sEzproVersionFromFile As String         'EZPRO软件版本号，来自checklist文件
     'Dim sEzproVersionFromAbout As String         'EZPRO软件版本号，来自About窗口
-    Dim hTreeChipType As Integer        '芯片型号选择Tree的句柄
+    'Dim hTreeChipType As Integer        '芯片型号选择Tree的句柄
+    Dim hTxtFileName As Integer
 
     Sub Main()
         '初始化
@@ -19,72 +19,95 @@ Module myMain
 
         GetInfoText()
         myWriteLine(sInfoText)
-        GetChipTypeHandle()
-        myWriteLine(hTreeChipType)
+
+        Dim s As String = "D:\temp\SIP_V1_V2_TX.WRT"
+        If Not OpenWRTFile(s) Then
+            Console.WriteLine("ERROR: File {0} not found!", s)
+            ExitMain()
+        End If
+
+        ''Dim nSelect As Integer
+        ' ''Dim nResult As Integer
+        ''Dim sSelect As New StringBuilder(STR_BUFFER_LEN)
+
+        ' ''nCount = SendMessage(hWnd, CB_GETCOUNT, 0, 0)
+        ''nSelect = SendMessage(hCmbFileName, CB_GETCURSEL, 0, 0)
+
+        ' ''nSelect=-1，表示combobox未选择条目
+        ''If Not nSelect = -1 Then
+        ''    SendMessageS(hCmbFileName, CB_GETLBTEXT, nSelect, sSelect)
+        ''Else
+        ''    sSelect.Append("<no select>")
+        ''End If
+        ''myWriteLine(sSelect.ToString)
+        'EnumChildWindows(hDlgOpen, New EnumWindowsCallback(AddressOf Do_FileName), 0)
+        'myWriteLine(hTxtFileName.ToString)
+
+
+        'GetChipTypeHandle()
+        'myWriteLine(hTreeChipType)
         'forMC30P6060.CheckAll()
 
+        ExitMain()
+    End Sub
+
+    'Private Function Do_FileName(ByVal hWnd As Integer, ByVal lParam As Integer) As Boolean
+    '    Dim sbClassName As New StringBuilder(STR_BUFFER_LEN)
+    '    GetClassName(hWnd, sbClassName, STR_BUFFER_LEN)
+    '    If sbClassName.ToString = "Edit" Then             '唯一一个Edit控件即是Filename输入Edit
+    '        hTxtFileName = hWnd
+    '        'SendMessageS1(hWnd, WM_SETTEXT, 0, "aaa")
+    '        Return False
+    '    Else
+    '        Return True
+    '    End If
+    'End Function
+
+    ''获取配置选择芯片窗口的句柄利用EnumChildWindows及EnumWindowsCallback实现
+    ''直接设置hTreeChipType变量
+    'Private Sub GetChipTypeHandle()
+    '    Try
+    '        '逐级查找配置芯片Button的handle
+    '        Dim hGroupTool As Integer = FindWindowEx(hWndMain, 0, vbNullString, TOOL_GROUP_TEXT)
+    '        Dim hCmdConfig As Integer = FindWindowEx(hGroupTool, 0, vbNullString, CHIP_BUTTON_TEXT)
+
+    '        '点击选择芯片Button，打开窗口
+    '        If Not hCmdConfig = 0 Then
+    '            PostMessage(hCmdConfig, BM_CLICK, 0, 0)
+    '            System.Threading.Thread.Sleep(300)          '等待300ms待窗口打开，否则可能取不到句柄
+    '            Dim hwndChip As Integer = FindWindow(vbNullString, CHIP_BUTTON_TEXT)
+    '            myWriteLine(hwndChip)
+    '            'Dim hTreeChipType As Integer = FindWindowEx(hGroupTool, 0, "TTreeView", vbNullString)
+    '            'myWriteLine(hTreeChipType)
+    '            EnumChildWindows(hwndChip, New EnumWindowsCallback(AddressOf Do_FindTreeChipType), 0)
+    '        Else
+    '        End If
+    '    Catch ex As Exception
+    '        MsgBox(ex.Message.ToString)
+    '    End Try
+    'End Sub
+
+    'Private Function Do_FindTreeChipType(ByVal hWnd As Integer, ByVal lParam As Integer) As Boolean
+    '    Dim strClassName As New StringBuilder(STR_BUFFER_LEN)
+    '    GetClassName(hWnd, strClassName, STR_BUFFER_LEN)
+    '    If strClassName.ToString = "TTreeView" Then             '唯一一个TTreeView控件即是芯片型号选择Tree
+    '        hTreeChipType = hWnd
+    '        SendMessage(hTreeChipType, TVM_SETBKCOLOR, 0, RGB(255, 0, 0))
+    '        'Dim tv As TVITEM
+    '        'tv.mask = TVIF_STATE Or TVIF_HANDLE
+    '        ''tv.state = TVIS_SELECTED
+    '        'SendMessageTV(hTreeChipType, TVM_GETITEM, 0, tv)
+    '        Return False
+    '    Else
+    '        Return True
+    '    End If
+    '    Return True
+    'End Function
+
+    Private Sub ExitMain()
         swLog.Close()
+        End
     End Sub
-
-    '获取配置选择芯片窗口的句柄利用EnumChildWindows及EnumWindowsCallback实现
-    '直接设置hTreeChipType变量
-    Private Sub GetChipTypeHandle()
-        Try
-            '逐级查找配置芯片Button的handle
-            Dim hGroupTool As Integer = FindWindowEx(hWndMain, 0, vbNullString, TOOL_GROUP_TEXT)
-            Dim hCmdConfig As Integer = FindWindowEx(hGroupTool, 0, vbNullString, CHIP_BUTTON_TEXT)
-
-            '点击选择芯片Button，打开窗口
-            If Not hCmdConfig = 0 Then
-                PostMessage(hCmdConfig, BM_CLICK, 0, 0)
-                System.Threading.Thread.Sleep(300)          '等待300ms待窗口打开，否则可能取不到句柄
-                Dim hwndChip As Integer = FindWindow(vbNullString, CHIP_BUTTON_TEXT)
-                myWriteLine(hwndChip)
-                'Dim hTreeChipType As Integer = FindWindowEx(hGroupTool, 0, "TTreeView", vbNullString)
-                'myWriteLine(hTreeChipType)
-                EnumChildWindows(hwndChip, New EnumWindowsCallback(AddressOf Do_FindTreeChipType), 0)
-            Else
-            End If
-        Catch ex As Exception
-            MsgBox(ex.Message.ToString)
-        End Try
-    End Sub
-
-    Private Function Do_FindTreeChipType(ByVal hWnd As Integer, ByVal lParam As Integer) As Boolean
-        Dim strClassName As New StringBuilder(STR_BUFFER_LEN)
-        GetClassName(hWnd, strClassName, STR_BUFFER_LEN)
-        If strClassName.ToString = "TTreeView" Then             '唯一一个TTreeView控件即是芯片型号选择Tree
-            hTreeChipType = hWnd
-            SendMessage(hTreeChipType, TVM_SETBKCOLOR, 0, RGB(255, 0, 0))
-            'Dim tv As TVITEM
-            'tv.mask = TVIF_STATE Or TVIF_HANDLE
-            ''tv.state = TVIS_SELECTED
-            'SendMessageTV(hTreeChipType, TVM_GETITEM, 0, tv)
-            Return False
-        Else
-            Return True
-        End If
-        Return True
-    End Function
-
-    '取得芯片信息栏的文字，利用EnumChildWindows及EnumWindowsCallback实现
-    '直接设置sInfoText变量
-    Private Sub GetInfoText()
-        EnumChildWindows(hWndMain, New EnumWindowsCallback(AddressOf Do_FindInfoText), 0)
-    End Sub
-
-    Private Function Do_FindInfoText(ByVal hWnd As Integer, ByVal lParam As Integer) As Boolean
-        Dim strClassName As New StringBuilder(STR_BUFFER_LEN)
-        GetClassName(hWnd, strClassName, STR_BUFFER_LEN)
-        If strClassName.ToString = "TMemo" Then             '唯一一个TMemo控件即是芯片信息栏
-            Dim str As New StringBuilder(STR_BUFFER_LEN)
-            SendMessageS(hWnd, WM_GETTEXT, STR_BUFFER_LEN, str)
-            sInfoText = str.ToString
-            Return False
-        Else
-            Return True
-        End If
-    End Function
 
     Private Sub InitMain()
         '判断EZPro100是否运行，且只有一个进程
@@ -129,50 +152,40 @@ Module myMain
         myWriteLine("")
     End Sub
 
-    '点击菜单项
-    'hWnd菜单所在窗口句柄
-    'nSubMenuPos子菜单序号，0起始
-    'nMenuItemPos菜单项序号，0起始
-    Public Function ClickMenu(ByVal hWnd As Integer, ByVal nSubMenuPos As Integer, ByVal nMenuItemPos As Integer) As Integer
-        Dim hMenu As Integer = GetMenu(hWnd)
-        Dim hSubMenu As Integer = GetSubMenu(hMenu, nSubMenuPos)
-        Dim hMenuItem As Integer = GetMenuItemID(hSubMenu, nMenuItemPos)
-        BringWindowToTop(hWnd)
-        PostMessage(hWnd, WM_COMMAND, hMenuItem, 0)
-    End Function
 
-    Private Function ExtractWindow() As Boolean
-        Dim hWndMain As Integer = FindWindow(vbNullString, EZPRO_TITLE)
-        'Dim hWndMain As Integer = GetWindowInfoHandle()
-        myWriteLine(hWndMain)
-        '遍历窗口的所有控件
-        If Not hWndMain = 0 Then
-            EnumChildWindows(hWndMain, New EnumWindowsCallback(AddressOf DoControl1), 0)
-        End If
-        Return True
-    End Function
 
-    Private Function DoControl1(ByVal hWnd As Integer, ByVal lParam As Integer) As Boolean
-        Dim strControlText As New StringBuilder(STR_BUFFER_LEN)
-        Dim strClassName As New StringBuilder(STR_BUFFER_LEN)
+    'Private Function ExtractWindow() As Boolean
+    '    Dim hWndMain As Integer = FindWindow(vbNullString, EZPRO_TITLE)
+    '    'Dim hWndMain As Integer = GetWindowInfoHandle()
+    '    myWriteLine(hWndMain)
+    '    '遍历窗口的所有控件
+    '    If Not hWndMain = 0 Then
+    '        EnumChildWindows(hWndMain, New EnumWindowsCallback(AddressOf DoControl1), 0)
+    '    End If
+    '    Return True
+    'End Function
 
-        GetWindowText(hWnd, strControlText, STR_BUFFER_LEN)
-        GetClassName(hWnd, strClassName, STR_BUFFER_LEN)
+    'Private Function DoControl1(ByVal hWnd As Integer, ByVal lParam As Integer) As Boolean
+    '    Dim strControlText As New StringBuilder(STR_BUFFER_LEN)
+    '    Dim strClassName As New StringBuilder(STR_BUFFER_LEN)
 
-        'myWrite("[" & nIndexControl.ToString("00") & "]" & "(Class)" & strClassName.ToString.PadRight(15) _
-        '    & "(Text)" & strControlText.ToString.PadLeft(50))
+    '    GetWindowText(hWnd, strControlText, STR_BUFFER_LEN)
+    '    GetClassName(hWnd, strClassName, STR_BUFFER_LEN)
 
-        myWriteLine("(Class)" & strClassName.ToString.PadRight(15) & "(Text)" & strControlText.ToString)
-        If strClassName.ToString = "TMemo" Then
-            myWriteLine("found")
-            Dim strSelect As New StringBuilder(STR_BUFFER_LEN)
-            SendMessageS(hWnd, WM_GETTEXT, 256, strSelect)
-            myWriteLine(strSelect.ToString)
-            Return False
-        End If
+    '    'myWrite("[" & nIndexControl.ToString("00") & "]" & "(Class)" & strClassName.ToString.PadRight(15) _
+    '    '    & "(Text)" & strControlText.ToString.PadLeft(50))
 
-        Return True
-    End Function
+    '    myWriteLine("(Class)" & strClassName.ToString.PadRight(15) & "(Text)" & strControlText.ToString)
+    '    If strClassName.ToString = "TMemo" Then
+    '        myWriteLine("found")
+    '        Dim strSelect As New StringBuilder(STR_BUFFER_LEN)
+    '        SendMessageS(hWnd, WM_GETTEXT, 256, strSelect)
+    '        myWriteLine(strSelect.ToString)
+    '        Return False
+    '    End If
+
+    '    Return True
+    'End Function
 
     'Private Function GetWindowInfoHandle() As Integer
     '    Dim hWndMain As Integer

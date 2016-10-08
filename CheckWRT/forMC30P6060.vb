@@ -49,20 +49,20 @@ Module forMC30P6060
 
     'EnumWindowsCallback函数，用于处理每个控件
     Private Function DoControl(ByVal hWnd As Integer, ByVal lParam As Integer) As Boolean
-        Dim strControlText As New StringBuilder(STR_BUFFER_LEN)
-        Dim strClassName As New StringBuilder(STR_BUFFER_LEN)
+        Dim sbControlText As New StringBuilder(STR_BUFFER_LEN)
+        Dim sbClassName As New StringBuilder(STR_BUFFER_LEN)
 
-        GetWindowText(hWnd, strControlText, STR_BUFFER_LEN)
-        GetClassName(hWnd, strClassName, STR_BUFFER_LEN)
+        GetWindowText(hWnd, sbControlText, STR_BUFFER_LEN)
+        GetClassName(hWnd, sbClassName, STR_BUFFER_LEN)
 
         'myWrite("[" & nIndexControl.ToString("00") & "]" & "(Class)" & strClassName.ToString.PadRight(15) _
         '    & "(Text)" & strControlText.ToString.PadLeft(50))
 
-        myWrite("[" & nIndexControl.ToString("00") & "]" & "(Class)" & strClassName.ToString.PadRight(15) _
-            & "(Text)" & strControlText.ToString)
+        myWrite("[" & nIndexControl.ToString("00") & "]" & "(Class)" & sbClassName.ToString.PadRight(15) _
+            & "(Text)" & sbControlText.ToString)
 
         Dim str As String
-        str = strClassName.ToString
+        str = sbClassName.ToString
         Select Case str
             Case "TRadioButton"
                 GetValue_TRadioButton(hWnd)
@@ -183,20 +183,20 @@ Module forMC30P6060
         'Dim nCount As Integer
         Dim nSelect As Integer
         'Dim nResult As Integer
-        Dim strSelect As New StringBuilder(STR_BUFFER_LEN)
+        Dim sbSelect As New StringBuilder(STR_BUFFER_LEN)
 
         'nCount = SendMessage(hWnd, CB_GETCOUNT, 0, 0)
         nSelect = SendMessage(hWnd, CB_GETCURSEL, 0, 0)
 
         'nSelect=-1，表示combobox未选择条目
         If Not nSelect = -1 Then
-            SendMessageS(hWnd, CB_GETLBTEXT, nSelect, strSelect)
+            SendMessageSB(hWnd, CB_GETLBTEXT, nSelect, sbSelect)
         Else
-            strSelect.Append("<no select>")
+            sbSelect.Append("<no select>")
         End If
 
         myWrite("  (Value)" & nSelect.ToString)
-        myWriteLine("  " & strSelect.ToString)
+        myWriteLine("  " & sbSelect.ToString)
 
         '根据nIndexControl序号，分别处理对应option位
         Select Case nIndexControl

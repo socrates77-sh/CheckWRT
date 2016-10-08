@@ -8,6 +8,7 @@ Public Module Win32API
     Public Const CB_GETCOUNT As Integer = &H146    'Combo box get count of items
     Public Const CB_GETLBTEXT As Integer = &H148   'Combo box get selected item string
     Public Const WM_GETTEXT As Integer = &HD       'Text box get text
+    Public Const WM_SETTEXT As Integer = &HC
     Public Const WM_SYSCOMMAND As Integer = &H112
     Public Const WM_COMMAND As Integer = &H111
     Public Const WM_KEYDOWN As Integer = &H100
@@ -53,8 +54,11 @@ Public Module Win32API
     Public Declare Function SendMessage Lib "user32.dll" _
         Alias "SendMessageA" (ByVal hwnd As Integer, ByVal wMsg As Integer, ByVal wParam As Integer, ByVal lParam As Integer) As Integer
 
-    Public Declare Function SendMessageS Lib "user32.dll" _
+    Public Declare Function SendMessageSB Lib "user32.dll" _
         Alias "SendMessageA" (ByVal hwnd As Integer, ByVal wMsg As Integer, ByVal wParam As Integer, ByVal lParam As StringBuilder) As Integer
+
+    Public Declare Function SendMessageS Lib "user32.dll" _
+        Alias "SendMessageA" (ByVal hwnd As Integer, ByVal wMsg As Integer, ByVal wParam As Integer, ByVal lParam As String) As Integer
 
     Public Declare Function SendMessageTV Lib "user32.dll" _
        Alias "SendMessageA" (ByVal hwnd As Integer, ByVal wMsg As Integer, ByVal wParam As Integer, ByRef lParam As TVITEM) As Integer
@@ -77,5 +81,7 @@ Public Module Win32API
     Public Declare Function GetSubMenu Lib "user32" Alias "GetSubMenu" (ByVal hMenu As Integer, ByVal nPos As Integer) As Integer
 
     Public Declare Function BringWindowToTop Lib "user32" Alias "BringWindowToTop" (ByVal hwnd As Integer) As Integer
+
+    Public Declare Function GetDlgItem Lib "user32" Alias "GetDlgItem" (ByVal hDlg As Integer, ByVal nIDDlgItem As Integer) As Integer
 
 End Module
