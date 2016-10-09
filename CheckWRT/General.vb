@@ -94,17 +94,43 @@ Module General
     '如文件不存在，则返回False；否则返回Ture
     Public Function OpenWRTFile(ByVal sFileName As String) As Boolean
         If Not My.Computer.FileSystem.FileExists(sFileName) Then
+            myWriteLine("ERROR: File " & sFileName & " not found!")
             Return False
         Else
-            ClickMenu(hWndMain, 0, 0)       '点击“打开”菜单
+            ClickMenu(hWndMain, 0, 0)       '点击“Open”菜单
             System.Threading.Thread.Sleep(300)
             Dim hDlgOpen As Integer = FindWindow(vbNullString, "打开")
             Dim hBtnOpen As Integer = FindWindowEx(hDlgOpen, 0, vbNullString, "打开(&O)")
             Dim hTxtFileName As Integer = GetDlgItem(hDlgOpen, &H47C)   '以ID方式取得filename控件（Edit）的句柄
             SendMessageS(hTxtFileName, WM_SETTEXT, 0, sFileName)   '填写filename的值
             SendMessage(hBtnOpen, BM_CLICK, 0, 0)   '点击Open按钮
+            myWriteLine("Open ... " & sFileName)
             Return True
         End If
     End Function
 
+    '点击菜单方式打开Save对话框，并保存为指定的WRT文件
+    'sFileName WRT文件名，含路径
+    '如路径不存在，则返回False；否则返回Ture
+    Public Function SaveWRTFile(ByVal sFileName As String) As Boolean
+        Dim sPath As String = My.Computer.FileSystem.GetParentPath(sFileName)
+        If Not My.Computer.FileSystem.DirectoryExists(sPath) Then
+            myWriteLine("ERROR: Path " & sPath & " not found!")
+            Return False
+        Else
+            '文件存在则先删除，保证更新
+            If My.Computer.FileSystem.FileExists(sFileName) Then
+                My.Computer.FileSystem.DeleteFile(sFileName)
+            End If
+            ClickMenu(hWndMain, 0, 1)       '点击“Save as”菜单
+            System.Threading.Thread.Sleep(300)
+            Dim hDlgSave As Integer = FindWindow(vbNullString, "另存为")
+            Dim hBtnSave As Integer = FindWindowEx(hDlgSave, 0, vbNullString, "保存(&S)")
+            Dim hTxtFileName As Integer = GetDlgItem(hDlgSave, &H47C)   '以ID方式取得filename控件（Edit）的句柄
+            SendMessageS(hTxtFileName, WM_SETTEXT, 0, sFileName)   '填写filename的值
+            SendMessage(hBtnSave, BM_CLICK, 0, 0)   '点击Save按钮
+            myWriteLine("Save ... " & sFileName)
+            Return True
+        End If
+    End Function
 End Module

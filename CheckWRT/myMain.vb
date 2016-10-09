@@ -22,30 +22,22 @@ Module myMain
 
         Dim s As String = "D:\temp\SIP_V1_V2_TX.WRT"
         If Not OpenWRTFile(s) Then
-            Console.WriteLine("ERROR: File {0} not found!", s)
+            'Console.WriteLine("ERROR: File {0} not found!", s)
             ExitMain()
         End If
 
-        ''Dim nSelect As Integer
-        ' ''Dim nResult As Integer
-        ''Dim sSelect As New StringBuilder(STR_BUFFER_LEN)
+        myWriteLine(SaveWRTFile("d:\temp1\aaa.WRT").ToString)
 
-        ' ''nCount = SendMessage(hWnd, CB_GETCOUNT, 0, 0)
-        ''nSelect = SendMessage(hCmbFileName, CB_GETCURSEL, 0, 0)
-
-        ' ''nSelect=-1，表示combobox未选择条目
-        ''If Not nSelect = -1 Then
-        ''    SendMessageS(hCmbFileName, CB_GETLBTEXT, nSelect, sSelect)
-        ''Else
-        ''    sSelect.Append("<no select>")
-        ''End If
-        ''myWriteLine(sSelect.ToString)
-        'EnumChildWindows(hDlgOpen, New EnumWindowsCallback(AddressOf Do_FileName), 0)
-        'myWriteLine(hTxtFileName.ToString)
+        Dim aS19 As New CS19(14, 0, 1024)
+        Dim i As Integer
+        For i = 0 To 255
+            aS19.PutByte(i, i)
+        Next
+        For i = 0 To 255
+            myWriteLine(i.ToString("X4") & ":" & aS19.GetByte(i).ToString("X2"))
+        Next
 
 
-        'GetChipTypeHandle()
-        'myWriteLine(hTreeChipType)
         'forMC30P6060.CheckAll()
 
         ExitMain()

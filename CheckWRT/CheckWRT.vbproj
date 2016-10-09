@@ -45,6 +45,7 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CS19.vb" />
     <Compile Include="forMC30P6060.vb" />
     <Compile Include="General.vb" />
     <Compile Include="myMain.vb" />
